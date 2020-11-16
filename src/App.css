@@ -1,3 +1,7 @@
+@import '~antd/dist/antd.css';
+body {
+  font-family: "-apple-system","BlinkMacSystemFont","Roboto","Helvetica Neue","MIcrosoft YaHei",sans-serif !important;
+}
 .App {
   text-align: center;
 }
@@ -36,3 +40,20 @@
     transform: rotate(360deg);
   }
 }
+.site-layout .site-layout-background {
+  background: #fff;
+}
+
+
+/*.login-box .login-form {*/
+/*  max-width: 300px;*/
+/*}*/
+/*.login-box .login-form-forgot {*/
+/*  float: right;*/
+/*}*/
+/*.login-box .ant-col-rtl .login-form-forgot {*/
+/*  float: left;*/
+/*}*/
+/*.login-box .login-form-button {*/
+/*  width: 100%;*/
+/*}*/
