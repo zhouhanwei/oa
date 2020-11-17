@@ -3,7 +3,7 @@
  */
 import React from "react";
 import Axios from "axios";
-import Transers from "../assets/../../config/transers";
+import Transers from "../../config1/transers";
 
 let instance = Axios.create({
     baseURL: 'http://127.0.0.1:8888'
