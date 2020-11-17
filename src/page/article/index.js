@@ -120,7 +120,7 @@ class Lists extends React.Component {
             // insertImgFn 是获取图片 url 后，插入到编辑器的方法
             // 上传图片，返回结果，将图片插入到编辑器中
             let Data = new FormData();
-            console.log(resultFiles[0])
+            //console.log(resultFiles[0])
             Data.append("file", resultFiles[0])
             new Https({
                 url:  "/upload/upload_editor_img",

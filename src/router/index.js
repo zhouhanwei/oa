@@ -13,8 +13,9 @@ import { Button,  Layout, Breadcrumb, Menu } from 'antd';
 import { MailOutlined, AppstoreOutlined, SettingOutlined, UserOutlined, LaptopOutlined,  } from '@ant-design/icons';
 import imgURL from '../assets/images/login.png';
 // page
-import Lists from "../page/article/index";
 import Main from "../page/commonPage/main";
+import ActivityHandle from "../page/article/handle";
+import ActivityLists from "../page/article/index";
 
 const routes = [
     {
@@ -26,12 +27,16 @@ const routes = [
         component: Topics
     },
     {
-        path: "/in",
+        path: "/activity",
         component: Main,
         routes: [
             {
-                path: "/in/index",
-                component: Lists
+                path: "/activity/index",  // 列表
+                component: ActivityLists,
+            },
+            {
+                path: "/activity/handle",  // 新增与编辑
+                component: ActivityHandle,
             },
         ]
     }

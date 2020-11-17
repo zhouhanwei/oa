@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import Router from './router/index';
+import ErrorBoundary from "./errorBoundary/index";
 
 // ReactDOM.render(
 // //   <React.StrictMode>
@@ -14,7 +15,7 @@ import Router from './router/index';
 // // );
 
 ReactDOM.render(
-        <Router/>,
+        <ErrorBoundary><Router/></ErrorBoundary>,
     document.getElementById('root')
 );
 
