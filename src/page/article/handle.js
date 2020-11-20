@@ -5,14 +5,16 @@ import {
 import { Form, Input, Button, Checkbox, Title, Typography, Divider, Upload, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import '../../assets/scss/classify/index.scss';
+import Url from "@cf/apiUrl";
+import { handleApiResult } from "@cf/publicFun";
 const { Title: Htitle } = Typography;
 
 const layout = {
     labelCol: {
-        span: 4,
+        span: 5,
     },
     wrapperCol: {
-        span: 20,
+        span: 19,
     },
 };
 
@@ -25,6 +27,17 @@ const tailLayout = {
 
 const onFinish = (values) => {
     console.log('Success:', values);
+    values.classifyIcon = "asd";
+    // 提交数据
+    handleApiResult({
+        url: `${Url.SAVE_OR_EDIT_CLASSIFY}`,
+        data: values,
+        method: "post",
+    }).then((res) => {
+        //alert(JSON.stringify(res))
+    }).catch((error) => {
+        alert(JSON.stringify(error))
+    })
 };
 
 const onFinishFailed = (errorInfo) => {
@@ -62,23 +75,37 @@ class ActivityHandle extends React.Component {
 
     //
     handleChange(info) {
-        if (info.file.status === 'uploading') {
-            this.setState({ loading: true });
-            return;
-        }
-        if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, imageUrl =>
-                this.setState({
-                    imageUrl,
-                    loading: false,
-                }, () => {
-                    this.refs.classifyForm.setFieldsValue({
-                        classifyIcon: imageUrl,
-                    })
-                }),
-            );
-        }
+        this.setState({ loading: true });
+        getBase64(info.file, imageUrl => {
+            alert(imageUrl)
+            handleApiResult({
+                url: `${Url.UPLOAD_BASE64}`,
+                data: {
+                    url: imageUrl,
+                },
+                method: "post",
+            }).then((res) => {
+                alert(JSON.stringify(res.data))
+            }).catch((error) => {
+                alert(JSON.stringify(error))
+            })
+            // this.setState({
+            //     imageUrl,
+            //     loading: false,
+            // }, () => {
+            //     // 设置图片
+            //     this.refs.classifyForm.setFieldsValue({
+            //         classifyIcon: imageUrl,
+            //     })
+            // })
+        })
+        return false;
+
+
+        // if (info.file.status === 'done') {
+        //     // Get this url from response in real world.
+        //     alert(info.file.response.url)
+        // }
     };
 
     // ..
@@ -90,7 +117,7 @@ class ActivityHandle extends React.Component {
         const uploadButton = (
             <div>
                 {loading ? <LoadingOutlined /> : <PlusOutlined />}
-                <div style={{ marginTop: 8 }}>Upload</div>
+                <div style={{ marginTop: 8 }}>上传图标</div>
             </div>
         );
         return (
@@ -112,40 +139,41 @@ class ActivityHandle extends React.Component {
                         onFinishFailed={onFinishFailed}
                     >
                         <Form.Item
-                            label="Username"
+                            label="分类名称"
                             name="classifyName"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Please input your username!',
+                                    message: '分类名称不能为空!',
                                 },
                             ]}
                             // hasFeedback
                             // validateStatus="success"
                             // help="The information is being validated..."
                         >
-                            <Input placeholder="请输入"/>
+                            <Input placeholder="请输入分类名称"/>
                         </Form.Item>
 
                         <Form.Item
-                            label="Username"
+                            label="分类ICON"
                             name="classifyIcon"
                             initialValue={imageUrl}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your username!',
-                                },
-                            ]}
+                            // rules={[
+                            //     {
+                            //         required: true,
+                            //         message: '分类ICON不能为空!',
+                            //     },
+                            // ]}
                         >
                             <Upload
                                 name="avatar"
                                 listType="picture-card"
                                 className="avatar-uploader"
                                 showUploadList={false}
-                                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                onRemove={() => {}}
                                 beforeUpload={beforeUpload}
-                                onChange={this.handleChange}
+                                customRequest={this.handleChange}
+                                // customRequest={this.handleChange}
                             >
                                 {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                             </Upload>
@@ -157,16 +185,16 @@ class ActivityHandle extends React.Component {
 
 
                         <Form.Item
-                            label="Password"
+                            label="分类描述"
                             name="classifyDes"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Please input your password!',
+                                    message: '分类描述不能为空!',
                                 },
                             ]}
                         >
-                            <Input.TextArea placeholder="请输入"/>
+                            <Input.TextArea placeholder="请输入分类描述"/>
                         </Form.Item>
 
                         <Form.Item {...tailLayout}>

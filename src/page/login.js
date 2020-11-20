@@ -1,9 +1,10 @@
 import React from 'react';
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import imgURL from '../assets/images/login.png';
+import imgURL from '@assets/images/logo.png';
 //首先引入需要的图片路径
 import '../assets/scss/login.scss';
+// ..
 const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },

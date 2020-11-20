@@ -1,10 +1,10 @@
 import React from 'react';
 import {Breadcrumb, Layout, Menu} from "antd";
 import {AppstoreOutlined} from "@ant-design/icons";
-import {Route, Switch} from "react-router-dom";
+import {Route, Switch, withRouter} from "react-router-dom";
 import Menus from "./menu.js";
-const { Header, Content, Footer, Sider } = Layout;
-
+import Headers from "./head.js";
+const {Content, Footer, Sider } = Layout;
 function Child(props) {
     console.log(props.history)
     return (
@@ -30,17 +30,13 @@ class Main extends React.Component {
         this.state= {};
     }
     render() {
+        const {routes} = this.props;
         return (
             <div className='main-layout'>
                 <Layout>
-                    <Header style={{ position: 'fixed', display: 'flex', zIndex: 1, width: '100%' }}>
-                        <div className="logo">
-                            {/*<img src={imgURL} width={100}/>*/}
-                            <img src={""} width={100}/>
-                        </div>
-                    </Header>
+                    <Headers/>
                     <Content className="site-layout" style={{ padding: '0 50px', marginTop: 64 }}>
-                        <Breadcrumb style={{ margin: '16px 0',  }}>
+                        <Breadcrumb style={{ margin: '16px 0' }}>
                             <Breadcrumb.Item>
                                 <a href="/about">...</a>
                             </Breadcrumb.Item>
@@ -55,7 +51,7 @@ class Main extends React.Component {
                                 <div>
                                     <Child>
                                         <Switch>
-                                            {this.props.routes.map((route, i) => (
+                                            {routes.map((route, i) => (
                                                 <RouteWithSubRoutes key={i} {...route} />
                                             ))}
                                         </Switch>
@@ -71,4 +67,4 @@ class Main extends React.Component {
     }
 }
 
-export default Main;
+export default withRouter(Main);

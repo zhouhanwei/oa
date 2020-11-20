@@ -3,8 +3,8 @@ import {
     withRouter
 } from "react-router-dom";
 import { Table, Tag, Space, Button } from 'antd';
-import E from 'wangeditor';
-import Https from "../../http/index";
+import Url from "@cf/apiUrl";
+import { handleApiResult } from "@cf/publicFun";
 
 function itemRender(current, type, originalElement) {
     if (type === 'prev') {
@@ -18,59 +18,23 @@ function itemRender(current, type, originalElement) {
 
 const columns = [
     {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
+        title: 'classifyName',
+        dataIndex: 'classifyName',
+        key: 'classifyName',
         render: text => <a>{text}</a>,
     },
     {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
+        title: 'classifyDes',
+        dataIndex: 'classifyDes',
+        key: 'classifyDes',
     },
     {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
-    },
-    {
-        title: 'Tags',
-        key: 'tags',
-        dataIndex: 'tags',
-        render: tags => (
-            <>
-                {tags.map(tag => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
-                    if (tag === 'loser') {
-                        color = 'volcano';
-                    }
-                    return (
-                        <Tag color={color} key={tag}>
-                            {tag.toUpperCase()}
-                        </Tag>
-                    );
-                })}
-            </>
-        ),
-    },
+        title: 'classifyIcon',
+        dataIndex: 'classifyIcon',
+        key: 'classifyIcon',
+    }
 ];
 
-let data = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
-    },
-];
 
 class Lists extends React.Component {
     constructor(props) {
@@ -89,78 +53,63 @@ class Lists extends React.Component {
         }]];
         this.state = {
             current: 1,
+            tableList: [],
+            total : 0,
         };
+
+        this.onShowSizeChange = this.onShowSizeChange.bind(this);
     }
     onShowSizeChange(page) {
-        data = [
-            {
-                key: '1' + page,
-                name: 'John Brown' + page,
-                age: 32,
-                address: 'New York No. 1 Lake Park',
-                tags: ['nice', 'developer'],
-            },
-            {
-                key: '2' + page,
-                name: 'Jim Green' + page,
-                age: 42,
-                address: 'London No. 1 Lake Park',
-                tags: ['loser'],
-            },
-        ]
         this.setState({
             current: page,
+        }, () => {
+            this.getList();
         })
 
     }
+    getList() {
+        const {current } = this.state;
+        handleApiResult({
+            url: `${Url.GET_CLASSIFY_LIST}`,
+            data: {
+                pageNum: current,
+                pageSize: 10,
+            },
+            method: "post",
+        }).then((res) => {
+            console.log(res);
+            this.setState({
+                tableList: res.data.data || [],
+                total: res.data.total,
+            })
+        }).catch((error) => {
+            //alert(JSON.stringify(error))
+        })
+    }
     componentDidMount() {
-        const editor = new E('#div1');
-        editor.config.customUploadImg = function (resultFiles, insertImgFn) {
-            // resultFiles 是 input 中选中的文件列表
-            // insertImgFn 是获取图片 url 后，插入到编辑器的方法
-            // 上传图片，返回结果，将图片插入到编辑器中
-            let Data = new FormData();
-            //console.log(resultFiles[0])
-            Data.append("file", resultFiles[0])
-            new Https({
-                url:  "/upload/upload_editor_img",
-                data: Data,
-                params: {
-                    name: 123
-                },
-                // headers: {
-                //     'Content-Type': "application/json; charset=utf-8;"
-                // },
-                method: "post",
-                callback: (res) => {
-                    const {url} = res.data;
-                    insertImgFn("http://127.0.0.1:8888/" + url)
-                }
-            }).getResults();
-        }
-        editor.create()
-        // console.log(this.props.history.push("/admin"))
+        this.getList();
     }
 
     render() {
-        const {current} = this.state;
+        const {current, tableList} = this.state;
         return (
             <div>
-                <div id="div1"></div>
+                {/*查询*/}
+                {/*列表分页*/}
                 <Table
-                    dataSource={data}
+                    dataSource={tableList}
                     loading={false}
                     pagination = {{
                         defaultCurrent:1,
                         current: current,
-                        total: 50,
+                        total: 16,
                         defaultPageSize: 10,
-                        pageSize: 2,
+                        pageSize: 10,
                         hideOnSinglePage: true,
                         itemRender: itemRender,
                         // showSizeChanger: true,
                         // showQuickJumper: true,
-                        onChange: this.onShowSizeChange.bind(this)
+                        onChange: this.onShowSizeChange
                     }}
                     columns={this.columns}
                 />

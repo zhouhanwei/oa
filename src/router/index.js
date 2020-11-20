@@ -11,7 +11,6 @@ import {
 import Login from "../page/login";
 import { Button,  Layout, Breadcrumb, Menu } from 'antd';
 import { MailOutlined, AppstoreOutlined, SettingOutlined, UserOutlined, LaptopOutlined,  } from '@ant-design/icons';
-import imgURL from '../assets/images/login.png';
 // page
 import Main from "../page/commonPage/main";
 import ActivityHandle from "../page/article/handle";
