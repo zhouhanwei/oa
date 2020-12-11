@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 import Router from './router/index';
 import ErrorBoundary from "./errorBoundary/index";
@@ -15,7 +14,9 @@ import ErrorBoundary from "./errorBoundary/index";
 // // );
 
 ReactDOM.render(
-        <ErrorBoundary><Router/></ErrorBoundary>,
+        <ErrorBoundary>
+            <Router/>
+        </ErrorBoundary>,
     document.getElementById('root')
 );
 

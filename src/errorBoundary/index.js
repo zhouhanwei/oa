@@ -11,7 +11,6 @@ export default class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch(error, errorInfo) {
-        alert(213)
         // 你同样可以将错误日志上报给服务器
         //logErrorToMyService(error, errorInfo);
     }

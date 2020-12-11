@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    withRouter
+    withRouter,
 } from "react-router-dom";
 import { Table, Space, Form, Input, Button, Radio } from 'antd';
 import Url from "@cf/apiUrl";
@@ -19,22 +19,27 @@ function itemRender(current, type, originalElement) {
 
 const columns = [
     {
-        title: 'classifyName',
+        title: '名称',
         dataIndex: 'classifyName',
         key: 'classifyName',
         width: 300,
         render: text => <a>{text}</a>,
     },
     {
-        title: 'classifyDes',
+        title: '描述',
         dataIndex: 'classifyDes',
         key: 'classifyDes',
     },
     {
-        title: 'classifyIcon',
+        title: '图标',
         dataIndex: 'classifyIcon',
         key: 'classifyIcon',
         width: 160,
+        render: (url) => (
+            <div>
+                <img src={url} width="60"/>
+            </div>
+        ),
     }
 ];
 
@@ -56,13 +61,13 @@ class Lists extends React.Component {
     constructor(props) {
         super(props);
         this.columns = [...columns, ...[{
-            title: 'Action',
+            title: "操作",
             key: 'action',
             fixed: 'right',
             render: (text, record) => (
                 <Space size="middle">
                     <Button type="primary" ghost size="small">编辑</Button>
-                    <Button size="small" danger onClick={() => props.history.push("/admin")}>删除</Button>
+                    <Button size="small" danger onClick={this.delClassify.bind(this, record.id)}>删除</Button>
                 </Space>
             ),
             align: "center",
@@ -74,8 +79,12 @@ class Lists extends React.Component {
             total : 0,
         };
 
-        this.onShowSizeChange = this.onShowSizeChange.bind(this);
+        this.onShowSizeChange = this.onShowSizeChange.bind(this);    // 分页切换
+        this.delClassify = this.delClassify.bind(this);   // 删除
+        this.addOrEditClassify = this.addOrEditClassify.bind(this);   // 新增或者删除
     }
+
+    // 分页切换
     onShowSizeChange(page) {
         this.setState({
             current: page,
@@ -84,6 +93,8 @@ class Lists extends React.Component {
         })
 
     }
+
+    // 获取数据
     getList() {
         const {current } = this.state;
         handleApiResult({
@@ -103,12 +114,35 @@ class Lists extends React.Component {
             //alert(JSON.stringify(error))
         })
     }
+
+    // 删除数据
+    delClassify(id) {
+        handleApiResult({
+            url: `${Url.DEL_CLASSIFY}`,
+            data: {
+                id: id
+            },
+            method: "post",
+        }).then((res) => {
+            this.getList();
+        }).catch((error) => {
+            alert(JSON.stringify(error))
+        })
+    }
+
+    // 新增或者编辑数据
+    addOrEditClassify() {
+        const {history} = this.props;
+        history.push("/activity/handle");
+    }
+
     componentDidMount() {
+        // 初始化数据
         this.getList();
     }
 
     render() {
-        const {current, tableList} = this.state;
+        const {current, tableList, total} = this.state;
         return (
             <div>
                 {/*查询*/}
@@ -118,29 +152,12 @@ class Lists extends React.Component {
                         layout="inline"
                         onValuesChange={onFormLayoutChange}
                     >
-                        <Form.Item label="Field AAAAAAAAAs  ">
-                            <Input placeholder="input placeholder" />
-                        </Form.Item>
-                        <Form.Item label="Field B">
-                            <Input placeholder="input placeholder" />
-                        </Form.Item>
-                        <Form.Item label="Field Bwew">
-                            <Input placeholder="input placeholder" />
-                        </Form.Item>
-                        <Form.Item label="Field B">
-                            <Input placeholder="input placeholder" />
-                        </Form.Item>
-                        <Form.Item label="Field B">
-                            <Input placeholder="input placeholder" />
-                        </Form.Item>
-                        <Form.Item label="Field B">
-                            <Input placeholder="input placeholder" />
-                        </Form.Item>
-                        <Form.Item label="Field B">
-                            <Input placeholder="input placeholder" />
+                        <Form.Item label="名称:">
+                            <Input placeholder="请输入名称" />
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary">Submit</Button>
+                            <Button type="primary">查询</Button>
+                            <Button type="primary" onClick={this.addOrEditClassify}>新增</Button>
                         </Form.Item>
                     </Form>
                 </div>
@@ -152,7 +169,7 @@ class Lists extends React.Component {
                     pagination = {{
                         defaultCurrent:1,
                         current: current,
-                        total: 16,
+                        total: total,
                         defaultPageSize: 10,
                         pageSize: 10,
                         hideOnSinglePage: true,

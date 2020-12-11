@@ -2,8 +2,9 @@ export default {
     /**
      * 文章资讯
      */
-    GET_CLASSIFY_LIST: "/api/getClassify",     // 获取列表
-    SAVE_OR_EDIT_CLASSIFY: "/api/saveClassify",  // 新增分类
+    GET_CLASSIFY_LIST: "/articleClassify/getClassify",     // 获取列表
+    SAVE_OR_EDIT_CLASSIFY: "/articleClassify/saveClassify",  // 新增分类
+    DEL_CLASSIFY: "/articleClassify/delClassify",// 删除分类
     /**
      * 公共上传
      */

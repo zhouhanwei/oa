@@ -1,6 +1,7 @@
 import React from "react";
 import {
-    withRouter
+    withRouter,
+    useParams
 } from "react-router-dom";
 import { Form, Input, Button, Checkbox, Title, Typography, Divider, Upload, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
@@ -27,7 +28,6 @@ const tailLayout = {
 
 const onFinish = (values) => {
     console.log('Success:', values);
-    values.classifyIcon = "asd";
     // 提交数据
     handleApiResult({
         url: `${Url.SAVE_OR_EDIT_CLASSIFY}`,
@@ -77,7 +77,6 @@ class ActivityHandle extends React.Component {
     handleChange(info) {
         this.setState({ loading: true });
         getBase64(info.file, imageUrl => {
-            alert(imageUrl)
             handleApiResult({
                 url: `${Url.UPLOAD_BASE64}`,
                 data: {
@@ -85,27 +84,21 @@ class ActivityHandle extends React.Component {
                 },
                 method: "post",
             }).then((res) => {
-                alert(JSON.stringify(res.data))
+                const {data, code, message} = res.data;
+                this.setState({
+                    imageUrl: data,
+                    loading: false,
+                }, () => {
+                    // 设置图片
+                    this.refs.classifyForm.setFieldsValue({
+                        classifyIcon: data,
+                    })
+                })
             }).catch((error) => {
                 alert(JSON.stringify(error))
             })
-            // this.setState({
-            //     imageUrl,
-            //     loading: false,
-            // }, () => {
-            //     // 设置图片
-            //     this.refs.classifyForm.setFieldsValue({
-            //         classifyIcon: imageUrl,
-            //     })
-            // })
         })
         return false;
-
-
-        // if (info.file.status === 'done') {
-        //     // Get this url from response in real world.
-        //     alert(info.file.response.url)
-        // }
     };
 
     // ..
@@ -114,6 +107,7 @@ class ActivityHandle extends React.Component {
 
     render() {
         const { loading, imageUrl } = this.state;
+        const id = this.props.match.params.id;
         const uploadButton = (
             <div>
                 {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -123,7 +117,7 @@ class ActivityHandle extends React.Component {
         return (
             <div>
                 <Divider orientation="left">
-                    <Htitle level={4} style={{margin: 0}}>标题</Htitle>
+                    <Htitle level={4} style={{margin: 0}}>标题{id}</Htitle>
                 </Divider>
                 <div style={{width: "600px", margin: "0 auto"}}>
                     <Form
@@ -153,17 +147,17 @@ class ActivityHandle extends React.Component {
                         >
                             <Input placeholder="请输入分类名称"/>
                         </Form.Item>
-
+                        {imageUrl}
                         <Form.Item
                             label="分类ICON"
                             name="classifyIcon"
                             initialValue={imageUrl}
-                            // rules={[
-                            //     {
-                            //         required: true,
-                            //         message: '分类ICON不能为空!',
-                            //     },
-                            // ]}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: '分类ICON不能为空!',
+                                },
+                            ]}
                         >
                             <Upload
                                 name="avatar"

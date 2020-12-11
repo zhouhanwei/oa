@@ -10,11 +10,12 @@ import {
 } from "react-router-dom";
 import Login from "../page/login";
 import { Button,  Layout, Breadcrumb, Menu } from 'antd';
-import { MailOutlined, AppstoreOutlined, SettingOutlined, UserOutlined, LaptopOutlined,  } from '@ant-design/icons';
+import { MailOutlined, AppstoreOutlined, SettingOutlined, UserOutlined, LaptopOutlined  } from '@ant-design/icons';
 // page
 import Main from "../page/commonPage/main";
 import ActivityHandle from "../page/article/handle";
 import ActivityLists from "../page/article/index";
+import ArticleIndex from "../page/article/list";
 
 const routes = [
     {
@@ -30,12 +31,16 @@ const routes = [
         component: Main,
         routes: [
             {
-                path: "/activity/index",  // 列表
+                path: "/activity/index",   // 列表
                 component: ActivityLists,
             },
             {
-                path: "/activity/handle",  // 新增与编辑
+                path: "/activity/handle/:id",  // 新增与编辑
                 component: ActivityHandle,
+            },
+            {
+                path: "/activity/article_index",  // 新增与编辑
+                component: ArticleIndex,
             },
         ]
     }
@@ -73,18 +78,6 @@ function Home() {
     );
 }
 
-
-// function Container ({ routes }) {
-//
-// }
-
-function Child(props) {
-    console.log(props.history)
-    return (
-        <div>{props.children}</div>
-    )
-}
-
 function Topics() {
     let match = useRouteMatch();
 
@@ -120,6 +113,6 @@ function Topics() {
 }
 
 function Topic() {
-    let { topicId } = useParams();
-    return <h3>Requested topic ID: {topicId}</h3>;
+    let { id } = useParams();
+    return <h3>Requested topic ID: {id}</h3>;
 }

@@ -21,9 +21,9 @@ class Menus extends React.Component {
                 defaultOpenKeys={['sub2']}
                 mode="inline"
             >
-                <SubMenu key="sub2" icon={<AppstoreOutlined />} title="...">
-                    <Menu.Item key="5">
-                        <div onClick={() => this.props.history.push("/in/index")}>...</div>
+                <SubMenu key="sub1" icon={<AppstoreOutlined />} title="...">
+                    <Menu.Item key="1">
+                        <div onClick={() => this.props.history.push("/in/index")}>分类列表</div>
                     </Menu.Item>
                     {/*<SubMenu key="sub3" title="Submenu">*/}
                     {/*    <Menu.Item key="7">Option 7</Menu.Item>*/}

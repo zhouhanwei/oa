@@ -3,9 +3,9 @@ import {
     withRouter
 } from "react-router-dom";
 import { Table, Tag, Space, Button } from 'antd';
-import E from 'wangeditor';
 import Url from "@cf/apiUrl";
 import { handleApiResult } from "@cf/publicFun";
+import Editor from "../../components/editor";
 
 function itemRender(current, type, originalElement) {
     if (type === 'prev') {
@@ -90,7 +90,10 @@ class Lists extends React.Component {
         }]];
         this.state = {
             current: 1,
+            editorHtml: "",
         };
+        // 获取编辑器内容
+        this.getContent = this.getContent.bind(this);
     }
     onShowSizeChange(page) {
         data = [
@@ -114,35 +117,22 @@ class Lists extends React.Component {
         })
 
     }
+
+    getContent(editorHtml) {
+        this.setState({
+            editorHtml
+        })
+    }
     componentDidMount() {
-        const editor = new E('#div1');
-        editor.config.customUploadImg = function (resultFiles, insertImgFn) {
-            // resultFiles 是 input 中选中的文件列表
-            // insertImgFn 是获取图片 url 后，插入到编辑器的方法
-            // 上传图片，返回结果，将图片插入到编辑器中
-            let Data = new FormData();
-            //console.log(resultFiles[0])
-            Data.append("file", resultFiles[0])
-            handleApiResult({
-                url: `${Url.UPLOAD_EDITOR_IMG}`,
-                data: Data,
-                method: "post",
-                isQuery: true,
-            }).then((res) => {
-                alert(JSON.stringify(res))
-            }).catch((error) => {
-                alert(JSON.stringify(error))
-            })
-        }
-        editor.create()
-        // console.log(this.props.history.push("/admin"))
     }
 
     render() {
-        const {current} = this.state;
+        const {current, editorHtml} = this.state;
         return (
             <div>
-                <div id="div1"></div>
+                {editorHtml}
+                <Editor idName="myEditor" getContent={this.getContent}/>
+                <p onClick={this.getContent.bind(this)}>获取content</p>
                 <Table
                     dataSource={data}
                     loading={false}
